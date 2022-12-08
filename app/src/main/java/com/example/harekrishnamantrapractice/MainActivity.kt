@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -47,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener {
-            var count = 0
 
             // Create a new SpeechRecognizer object
             val recognizer = SpeechRecognizer.createSpeechRecognizer(this)
@@ -60,7 +60,11 @@ class MainActivity : AppCompatActivity() {
             // Set the mantra that we want to recognize
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "om")
 
+            var mantraCounter = 0 // Step 1
+
             val listener = object : RecognitionListener {
+
+
                 override fun onReadyForSpeech(params: Bundle?) {
                     // Do something when the speech input is ready
                 }
@@ -70,31 +74,55 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onRmsChanged(p0: Float) {
-                    TODO("Not yet implemented")
+                    // do something
                 }
 
                 override fun onBufferReceived(p0: ByteArray?) {
-                    TODO("Not yet implemented")
+                    // do something
                 }
 
                 override fun onEndOfSpeech() {
-                    TODO("Not yet implemented")
+                    // do something
                 }
 
                 override fun onError(p0: Int) {
-                    TODO("Not yet implemented")
+                    if (mantraCounter < 20) {
+                        recognizer.startListening(intent)
+                    }
+                    Log.d("Hey this is Jaga, the Error Number is ", p0.toString())
                 }
 
                 override fun onResults(p0: Bundle?) {
-                    TODO("Not yet implemented")
+                    val results = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    if (results != null) {
+                        for (result in results) {
+                            if (result.contains("Krishna")) { // Step 2
+                                mantraCounter++
+                            }
+                        }
+                    }
+                    Log.d("Hey we got results", mantraCounter.toString())
+                    Log.d("We are listening. We have received results!", p0.toString())
+                    if (mantraCounter < 20) {
+                        recognizer.startListening(intent)
+                    }
+
                 }
 
                 override fun onPartialResults(p0: Bundle?) {
-                    println("We are listening. We have received results!")
+                    val results = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    if (results != null) {
+                        for (result in results) {
+                            if (result.contains("Krishna")) { // Step 2
+                                mantraCounter++
+                            }
+                        }
+                    }
+                    Log.d("We are listening. We have received results!", p0.toString())
                 }
 
                 override fun onEvent(p0: Int, p1: Bundle?) {
-                    TODO("Not yet implemented")
+                    //do
                 }
 
                 // Other overridden methods go here
