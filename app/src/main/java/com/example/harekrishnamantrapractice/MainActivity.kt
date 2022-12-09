@@ -1,9 +1,6 @@
 package com.example.harekrishnamantrapractice
 
 import android.Manifest
-import android.app.Activity
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -20,12 +17,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
-import androidx.work.OneTimeWorkRequest
 import com.example.harekrishnamantrapractice.databinding.ActivityMainBinding
-import com.google.android.material.snackbar.Snackbar
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,8 +32,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-
-        val workRequest = OneTimeWorkRequest.Builder(MantraCounter::class.java).build()
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
@@ -96,7 +86,9 @@ class MainActivity : AppCompatActivity() {
                     val results = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     if (results != null) {
                         for (result in results) {
-                            if (result.contains("Krishna")) { // Step 2
+                            val words = result.split(" ") // Step 2
+                            for (word in words) {
+                                if (word.contains("Krishna", ignoreCase = true))
                                 mantraCounter++
                             }
                         }
@@ -155,15 +147,5 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
-    }
-}
-// Create a new Worker class to run the recognition code
-class MantraCounter(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
-    // Override the doWork() method
-    override fun doWork(): Result {
-        // Create a global variable to hold the count of mantras
-
-        // Return Result.success() to indicate that the task was completed successfully
-        return Result.success()
     }
 }
