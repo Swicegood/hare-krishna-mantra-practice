@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import com.example.harekrishnamantrapractice.databinding.FragmentFirstBinding
 
@@ -32,9 +33,15 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        val packageName = context!!.packageName
+
+        for (i in 0..15) {
+            val tview = getView()!!.findViewById<TextView>(resources.getIdentifier("texview" + i, "id", packageName))
+            tview.textSize = 36f
         }
+  //      binding.buttonFirst.setOnClickListener {
+  //          findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+  //      }
     }
 
     override fun onDestroyView() {
