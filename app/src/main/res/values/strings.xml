@@ -2,26 +2,11 @@
     <string name="app_name">Hare Krishna Mantra Practice</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">Mantras Chanted</string>
-    <string name="second_fragment_label">Mantra Chanting</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="first_fragment_0">Hare</string>
-    <string name="first_fragment_1">Krishna</string>
-    <string name="first_fragment_2">Hare</string>
-    <string name="first_fragment_3">Krishna</string>
-    <string name="first_fragment_4">Krishna</string>
-    <string name="first_fragment_5">Krishna</string>
-    <string name="first_fragment_6">Hare</string>
-    <string name="first_fragment_7">Hare</string>
-    <string name="first_fragment_8">Hare</string>
-    <string name="first_fragment_9">Rama</string>
-    <string name="first_fragment_10">Hare</string>
-    <string name="first_fragment_11">Rama</string>
-    <string name="first_fragment_12">Rama</string>
-    <string name="first_fragment_13">Rama</string>
-    <string name="first_fragment_14">Hare</string>
-    <string name="first_fragment_15">Hare</string>
+    <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>
