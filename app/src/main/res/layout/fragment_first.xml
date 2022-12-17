@@ -16,4 +16,139 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4pt"
+        android:text="@string/first_fragment_1"
+        app:layout_constraintLeft_toRightOf="@id/textview0"
+        app:layout_constraintTop_toTopOf="@id/textview0" />
+
+    <TextView
+        android:id="@+id/textview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="88dp"
+        android:text="@string/first_fragment_2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview0" />
+
+    <TextView
+        android:id="@+id/textview3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4pt"
+        android:text="@string/first_fragment_3"
+        app:layout_constraintLeft_toRightOf="@id/textview2"
+        app:layout_constraintTop_toTopOf="@id/textview2" />
+
+    <TextView
+        android:id="@+id/textview4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="88dp"
+        android:text="@string/first_fragment_4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview2" />
+
+    <TextView
+        android:id="@+id/textview5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4pt"
+        android:text="@string/first_fragment_5"
+        app:layout_constraintLeft_toRightOf="@id/textview4"
+        app:layout_constraintTop_toTopOf="@id/textview4" />
+
+    <TextView
+        android:id="@+id/textview6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="88dp"
+        android:text="@string/first_fragment_6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview4" />
+
+    <TextView
+        android:id="@+id/textview7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4pt"
+        android:text="@string/first_fragment_7"
+        app:layout_constraintLeft_toRightOf="@id/textview6"
+        app:layout_constraintTop_toTopOf="@id/textview6" />
+
+    <TextView
+        android:id="@+id/textview8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="88dp"
+        android:text="@string/first_fragment_8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview6" />
+
+    <TextView
+        android:id="@+id/textview9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4pt"
+        android:text="@string/first_fragment_9"
+        app:layout_constraintLeft_toRightOf="@id/textview8"
+        app:layout_constraintTop_toTopOf="@id/textview8" />
+
+    <TextView
+        android:id="@+id/textview10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="88dp"
+        android:text="@string/first_fragment_10"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview8" />
+
+    <TextView
+        android:id="@+id/textview11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4pt"
+        android:text="@string/first_fragment_11"
+        app:layout_constraintLeft_toRightOf="@id/textview10"
+        app:layout_constraintTop_toTopOf="@id/textview10" />
+
+    <TextView
+        android:id="@+id/textview12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="88dp"
+        android:text="@string/first_fragment_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview10" />
+
+    <TextView
+        android:id="@+id/textview13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4pt"
+        android:text="@string/first_fragment_13"
+        app:layout_constraintLeft_toRightOf="@id/textview12"
+        app:layout_constraintTop_toTopOf="@id/textview12" />
+
+    <TextView
+        android:id="@+id/textview14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="88dp"
+        android:text="@string/first_fragment_14"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview12" />
+
+    <TextView
+        android:id="@+id/textview15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4pt"
+        android:text="@string/first_fragment_15"
+        app:layout_constraintLeft_toRightOf="@id/textview14"
+        app:layout_constraintTop_toTopOf="@id/textview14" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
