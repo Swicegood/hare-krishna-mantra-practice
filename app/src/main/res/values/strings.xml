@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Hare Krishna Mantra Practice</string>
     <string name="action_settings">Settings</string>
+    <string name="action_clear">Clear</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Mantras Chanted</string>
     <string name="second_fragment_label">Mantra Chanting</string>

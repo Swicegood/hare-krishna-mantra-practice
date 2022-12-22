@@ -1,4 +1,4 @@
-package com.example.harekrishnamantrapractice
+package com.iskcon.harekrishnamantrapractice
 
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
-import com.example.harekrishnamantrapractice.databinding.FragmentFirstBinding
+import com.iskcon.harekrishnamantrapractice.databinding.FragmentFirstBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
