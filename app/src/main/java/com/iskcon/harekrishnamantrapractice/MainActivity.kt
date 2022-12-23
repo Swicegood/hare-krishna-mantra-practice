@@ -5,8 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -74,8 +72,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener {
             if (switchon) {
-                // Create a new SpeechRecognizer object
+
+                    // Create a new SpeechRecognizer object
                 var recognizer = SpeechRecognizer.createSpeechRecognizer(this)
+
                 // Request permission to use the microphone
                 if (ContextCompat.checkSelfPermission(
                         this,
@@ -123,8 +123,8 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onError(p0: Int) {
                         Log.d("Hey this is Jaga, the Error Number is ", p0.toString())
-                        if (p0 != 8 && (switchon == false)){  // stop everything if button is pressed every other time
-                            recognizer.startListening(intent)
+                        if (p0 != 8 && !switchon){  // stop everything if button is pressed every other time
+                            recognizer?.startListening(intent)
                         }
 
                     }
@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                                     ) {
                                         tVs[mantraCounter % 16]?.setTypeface(null, Typeface.BOLD)
                                         mantraCounter++
-                                        getSupportActionBar()?.setTitle("Names Mantras Rounds: " + mantraCounter.toString() + " " + (mantraCounter / 16).toString() + " " + (mantraCounter / 108).toString())
+                                        supportActionBar?.title = "Nam Man Rnds: " + mantraCounter.toString() + " " + (mantraCounter / 16).toString() + " " + (mantraCounter / 108).toString()
                                         tVs[(mantraCounter - 1) % 16]?.setTypeface(
                                             null,
                                             Typeface.NORMAL
@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
 
                         Log.d("Hey we got results", mantraCounter.toString())
                         Log.d("We are listening. We have received results!", p0.toString())
-                        recognizer.startListening(intent)
+                        recognizer?.startListening(intent)
 
 
                     }
@@ -195,8 +195,8 @@ class MainActivity : AppCompatActivity() {
                 switchon = false
 
                 // Start the recognition process
-                recognizer.setRecognitionListener(listener)
-                recognizer.startListening(intent)
+                recognizer?.setRecognitionListener(listener)
+                recognizer?.startListening(intent)
 
             }else{
                 switchon = true
@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             R.id.action_clr -> {
                 mantraCounter = 0
-                getSupportActionBar()?.setTitle("Names Mantras Rounds: 0 0 0")
+                supportActionBar?.title = "Nam Man Rnds: 0 0 0"
                 return true
             }
             else -> super.onOptionsItemSelected(item)

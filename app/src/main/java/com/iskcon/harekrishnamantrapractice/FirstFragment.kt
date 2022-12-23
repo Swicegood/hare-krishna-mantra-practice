@@ -36,7 +36,7 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        var tvIDs = arrayOf<Int>(R.id.textview0,
+        val tvIDs = arrayOf<Int>(R.id.textview0,
                                  R.id.textview1,
                                  R.id.textview2,
                                  R.id.textview3,
