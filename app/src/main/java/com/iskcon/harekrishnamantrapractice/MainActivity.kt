@@ -5,8 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -172,7 +170,6 @@ class MainActivity : AppCompatActivity() {
                         recognizer?.startListening(intent)
 
 
-
                     }
 
                     override fun onPartialResults(p0: Bundle?) {
@@ -201,37 +198,6 @@ class MainActivity : AppCompatActivity() {
                 recognizer?.setRecognitionListener(listener)
                 recognizer?.startListening(intent)
 
-                // Create a new thread for the animation
-                val animationThread = Thread {
-                    // Set the initial index of the text view to animate
-                    var index = 0
-
-                    // Create a new handler to update the text views
-                    val handler = Handler(Looper.getMainLooper())
-                    while (!switchon) {
-                        // Update the text view at the current index
-                        handler.post {
-                            tVs[index]?.animate()
-                                ?.scaleX(1.5f)
-                                ?.scaleY(1.5f)
-                                ?.setDuration(200)
-                                ?.withEndAction {
-                                    tVs[index]?.animate()
-                                        ?.scaleX(1f)
-                                        ?.scaleY(1f)
-                                        ?.setDuration(200)
-                                        ?.start()
-                                }
-                                ?.start()
-                        }
-                        // Sleep for a short interval before updating the next text view
-                        Thread.sleep(500)
-                        // Increment the index and wrap around if necessary
-                        index = (index + 1) % tVs.size
-                    }
-                }
-                // Start the animation thread
-                animationThread.start()
             }else{
                 switchon = true
             }
