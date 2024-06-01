@@ -1,6 +1,7 @@
 package com.iskcon.harekrishnamantrapractice
 
 import android.Manifest
+import com.iskcon.harekrishnamantrapractice.databinding.ActivityMainBinding
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
@@ -11,21 +12,21 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationView
-import com.iskcon.harekrishnamantrapractice.databinding.ActivityMainBinding
-import androidx.appcompat.widget.Toolbar
+import android.widget.Toast
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,11 +54,26 @@ class MainActivity : AppCompatActivity() {
         // Set up the drawer toggle
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
+            R.string.drawer_open,
+            R.string.drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+
+        navigationView.setNavigationItemSelectedListener { item ->
+            val id = item.itemId
+            // Handle navigation view item clicks here.
+            if (id == R.id.nav_item_one) {
+                // Handle the action
+            } else if (id == R.id.nav_item_two) {
+                mantraCounter = 0
+                supportActionBar?.title = "Nam Man Rnds: 0 0 0"
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
+
 
         // Set up the navigation controller
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -104,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                 val listener = object : RecognitionListener {
                     override fun onReadyForSpeech(params: Bundle?) {
                         // Do something when the speech input is ready
+                        Toast.makeText(this@MainActivity, "Listening...", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onBeginningOfSpeech() {
@@ -157,6 +174,8 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
+                        Log.d("Hey we got results", mantraCounter.toString())
+                        Log.d("We are listening. We have received results!", results.toString())
                         recognizer.startListening(intent)
                     }
 
@@ -211,30 +230,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            R.id.action_clr -> {
-                mantraCounter = 0
-                supportActionBar?.title = "Nam Man Rnds: 0 0 0"
-                return true
-            }
-            R.id.action_about -> {
-                if (drawerLayout.isDrawerOpen(navigationView)) {
-                    drawerLayout.closeDrawer(navigationView)
-                } else {
-                    drawerLayout.openDrawer(navigationView)
-                }
-                return true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
