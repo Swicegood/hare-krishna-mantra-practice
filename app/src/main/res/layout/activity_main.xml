@@ -35,7 +35,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            app:srcCompat="@android:drawable/ic_btn_speak_now" />
+            app:backgroundTint="@color/coral"
+            app:srcCompat="@drawable/ic_baseline_mic_24"
+            app:tint="@android:color/white" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

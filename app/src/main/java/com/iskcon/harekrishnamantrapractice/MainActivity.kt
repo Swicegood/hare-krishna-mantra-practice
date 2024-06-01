@@ -144,6 +144,38 @@ class MainActivity : AppCompatActivity() {
                         if (error != SpeechRecognizer.ERROR_NO_MATCH && !switchon) {
                             recognizer.startListening(intent)
                         }
+                        if (error == SpeechRecognizer.ERROR_NETWORK) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Network error. Please check your internet connection.",
+                                Toast.LENGTH_SHORT
+                            ).show();
+                        } else if (error == SpeechRecognizer.ERROR_AUDIO) {
+                            Toast.makeText(this@MainActivity, "Audio error. Please try again.", Toast.LENGTH_SHORT)
+                                .show();
+                        } else if (error == SpeechRecognizer.ERROR_SERVER) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Server error. Please try again later.",
+                                Toast.LENGTH_SHORT
+                            ).show();
+                        } else if (error == SpeechRecognizer.ERROR_CLIENT) {
+                            Toast.makeText(this@MainActivity, "Client error. Please try again.", Toast.LENGTH_SHORT)
+                                .show();
+                        } else if (error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) {
+                            Toast.makeText(this@MainActivity, "No speech input. Please try again.", Toast.LENGTH_SHORT)
+                                .show();
+                        } else if (error == SpeechRecognizer.ERROR_NO_MATCH) {
+                            Toast.makeText(this@MainActivity, "No Holy Names heard. Please try again.", Toast.LENGTH_SHORT)
+                                .show();
+                        } else if (error == SpeechRecognizer.ERROR_RECOGNIZER_BUSY) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Recognition service is busy. Please try again later.",
+                                Toast.LENGTH_SHORT
+                            ).show();
+                        }
+
                     }
 
                     override fun onResults(results: Bundle?) {

@@ -54,12 +54,6 @@ class FirstFragment : Fragment() {
                                  R.id.textview14,
                                  R.id.textview15)
 
-        for (element in tvIDs){
-            var tview = getView()?.findViewById<TextView>(element)
-            tview?.textSize = 36f
-            Log.d("Heeeeeeeeeeeeeeeeeeeeeeeey here is the tvew", tview.toString())
-        }
-
     }
 
 

@@ -6,142 +6,193 @@
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
-    <TextView
-        android:id="@+id/textview0"
+    <!-- Define a Guideline at 50% height to confine GridLayout to the top half -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5mm"
-        android:layout_marginTop="8mm"
-        android:text="@string/first_fragment_0"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:columnCount="4"
+        app:rowCount="4">
 
-    <TextView
-        android:id="@+id/textview1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4pt"
-        android:text="@string/first_fragment_1"
-        app:layout_constraintLeft_toRightOf="@id/textview0"
-        app:layout_constraintTop_toTopOf="@id/textview0" />
+        <TextView
+            android:id="@+id/textview0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_0"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_fragment_2"
-        app:layout_constraintLeft_toLeftOf="@id/textview0"
-        app:layout_constraintTop_toBottomOf="@id/textview0" />
+        <TextView
+            android:id="@+id/textview1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_1"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4pt"
-        android:text="@string/first_fragment_3"
-        app:layout_constraintLeft_toRightOf="@id/textview2"
-        app:layout_constraintTop_toTopOf="@id/textview2" />
+        <TextView
+            android:id="@+id/textview2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_2"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_fragment_4"
-        app:layout_constraintLeft_toLeftOf="@id/textview0"
-        app:layout_constraintTop_toBottomOf="@id/textview2" />
+        <TextView
+            android:id="@+id/textview3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_3"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4pt"
-        android:text="@string/first_fragment_5"
-        app:layout_constraintLeft_toRightOf="@id/textview4"
-        app:layout_constraintTop_toTopOf="@id/textview4" />
+        <TextView
+            android:id="@+id/textview4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_4"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
+        <TextView
+            android:id="@+id/textview5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_5"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_fragment_6"
-        app:layout_constraintLeft_toLeftOf="@id/textview0"
-        app:layout_constraintTop_toBottomOf="@id/textview4" />
+        <TextView
+            android:id="@+id/textview6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_6"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4pt"
-        android:text="@string/first_fragment_7"
-        app:layout_constraintLeft_toRightOf="@id/textview6"
-        app:layout_constraintTop_toTopOf="@id/textview6" />
+        <TextView
+            android:id="@+id/textview7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_7"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_fragment_8"
-        app:layout_constraintLeft_toLeftOf="@id/textview0"
-        app:layout_constraintTop_toBottomOf="@id/textview6" />
+        <TextView
+            android:id="@+id/textview8"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_8"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4pt"
-        android:text="@string/first_fragment_9"
-        app:layout_constraintLeft_toRightOf="@id/textview8"
-        app:layout_constraintTop_toTopOf="@id/textview8" />
+        <TextView
+            android:id="@+id/textview9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_9"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_fragment_10"
-        app:layout_constraintLeft_toLeftOf="@id/textview0"
-        app:layout_constraintTop_toBottomOf="@id/textview8" />
+        <TextView
+            android:id="@+id/textview10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_10"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4pt"
-        android:text="@string/first_fragment_11"
-        app:layout_constraintLeft_toRightOf="@id/textview10"
-        app:layout_constraintTop_toTopOf="@id/textview10" />
+        <TextView
+            android:id="@+id/textview11"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_11"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_fragment_12"
-        app:layout_constraintLeft_toLeftOf="@id/textview0"
-        app:layout_constraintTop_toBottomOf="@id/textview10" />
+        <TextView
+            android:id="@+id/textview12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_12"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4pt"
-        android:text="@string/first_fragment_13"
-        app:layout_constraintLeft_toRightOf="@id/textview12"
-        app:layout_constraintTop_toTopOf="@id/textview12" />
+        <TextView
+            android:id="@+id/textview13"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_13"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/first_fragment_14"
-        app:layout_constraintLeft_toLeftOf="@id/textview0"
-        app:layout_constraintTop_toBottomOf="@id/textview12" />
+        <TextView
+            android:id="@+id/textview14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_14"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
 
-    <TextView
-        android:id="@+id/textview15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4pt"
-        android:text="@string/first_fragment_15"
-        app:layout_constraintLeft_toRightOf="@id/textview14"
-        app:layout_constraintTop_toTopOf="@id/textview14" />
+        <TextView
+            android:id="@+id/textview15"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="@string/first_fragment_15"
+            style="@style/CustomTextViewStyle"
+            android:gravity="center" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/gridLayout"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
