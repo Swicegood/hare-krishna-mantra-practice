@@ -2,7 +2,6 @@ package com.iskcon.harekrishnamantrapractice
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
@@ -49,13 +48,14 @@ class SpeechRecognitionManager(
             resultList?.forEach { result ->
                 result.split(' ').forEach { word ->
                 if (isMantraWord(word)) {
-                    tVs[mantraCounter % 16].setTypeface(null, Typeface.BOLD)
                     mantraCounter++
-                    onRecognitionResult(mantraCounter, recognizedText)
-                    tVs[(mantraCounter - 1) % 16].setTypeface(null, Typeface.NORMAL)
+                    onRecognitionResult(mantraCounter, recognizedText.replace("हरे", "Hare")
+                        .replace("कृष्णा", "Krishna")
+                        .replace("राम", "Rama"))
                 }
                 }
             }
+            Log.d("SpeechRecognition", "Results: $results")
             recognizer.startListening(intent)
         }
 
@@ -82,7 +82,7 @@ class SpeechRecognitionManager(
                     word.contains("Merry", ignoreCase = true) ||
                     word.contains("Christmas", ignoreCase = true) ||
                     word.contains("Christian", ignoreCase = true) ||
-                    word.contains("कृष्ण", ignoreCase = true) ||
+                    word.contains("कृष्णा", ignoreCase = true) ||
                     word.contains("Snickers", ignoreCase = true) ||
                     word.contains("hurray", ignoreCase = true) ||
                     word.contains("today", ignoreCase = true) ||
