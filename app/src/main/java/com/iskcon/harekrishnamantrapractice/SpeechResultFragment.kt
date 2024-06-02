@@ -24,7 +24,7 @@ class SpeechResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Example: Setting speech recognition result to TextView
-        val speechRecognitionResult = "This is a sample speech recognition result."
+        val speechRecognitionResult = "Speech recognition result will appear here."
         binding.speechResultTextView.text = speechRecognitionResult
     }
 
