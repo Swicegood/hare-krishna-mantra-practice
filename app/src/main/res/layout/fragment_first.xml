@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
-    <!-- Define a Guideline at 50% height to confine GridLayout to the top half -->
+    <!-- Define a Guideline at this height to confine GridLayout to the top half -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
@@ -193,6 +193,17 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintTop_toBottomOf="@id/gridLayout"
+        app:layout_constraintBottom_toBottomOf="@+id/gridLayout" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/gridLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
+    <!-- Include the speech result layout -->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

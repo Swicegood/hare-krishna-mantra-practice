@@ -1,17 +1,8 @@
 package com.iskcon.harekrishnamantrapractice
 
 import android.Manifest
-import com.iskcon.harekrishnamantrapractice.databinding.ActivityMainBinding
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
-import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -25,8 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationView
-import android.widget.Toast
-
+import com.iskcon.harekrishnamantrapractice.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +27,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
 
     var mantraCounter = 0
+    private var switchon: Boolean = true
+    private var animationManager: AnimationManager? = null
+    private var speechRecognitionManager: SpeechRecognitionManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +53,6 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-
         navigationView.setNavigationItemSelectedListener { item ->
             val id = item.itemId
             // Handle navigation view item clicks here.
@@ -73,7 +65,6 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-
 
         // Set up the navigation controller
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -89,13 +80,20 @@ class MainActivity : AppCompatActivity() {
         )
         val tVs = tvIDs.map { binding.root.findViewById<TextView>(it) }.toTypedArray()
 
-        var switchon = true
+        animationManager = AnimationManager(tVs)
+        speechRecognitionManager = SpeechRecognitionManager(this, tVs, animationManager, ::onRecognitionResult)
+
+        // Load SpeechResultFragment
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment_container_view, SpeechResultFragment())
+        fragmentTransaction.commit()
 
         binding.fab.setOnClickListener {
+            switchon = !switchon
             if (switchon) {
-                val recognizer = SpeechRecognizer.createSpeechRecognizer(this)
-
-                // Request permission to use the microphone
+                speechRecognitionManager?.stopListening()
+                animationManager?.stopAnimation()
+            } else {
                 if (ContextCompat.checkSelfPermission(
                         this,
                         Manifest.permission.RECORD_AUDIO
@@ -107,165 +105,21 @@ class MainActivity : AppCompatActivity() {
                         0
                     )
                 }
-
-                // Create a new Intent to recognize speech
-                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, "hi-IN")
-                    putExtra(
-                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                    )
-                }
-
-                val listener = object : RecognitionListener {
-                    override fun onReadyForSpeech(params: Bundle?) {
-                        // Do something when the speech input is ready
-                        Toast.makeText(this@MainActivity, "Listening...", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onBeginningOfSpeech() {
-                        // Do something when the speech input has started
-                    }
-
-                    override fun onRmsChanged(rmsdB: Float) {
-                        // Do something
-                    }
-
-                    override fun onBufferReceived(buffer: ByteArray?) {
-                        // Do something
-                    }
-
-                    override fun onEndOfSpeech() {
-                        // Do something
-                    }
-
-                    override fun onError(error: Int) {
-                        Log.d("SpeechRecognition", "Error: $error")
-                        if (error != SpeechRecognizer.ERROR_NO_MATCH && !switchon) {
-                            recognizer.startListening(intent)
-                        }
-                        if (error == SpeechRecognizer.ERROR_NETWORK) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Network error. Please check your internet connection.",
-                                Toast.LENGTH_SHORT
-                            ).show();
-                        } else if (error == SpeechRecognizer.ERROR_AUDIO) {
-                            Toast.makeText(this@MainActivity, "Audio error. Please try again.", Toast.LENGTH_SHORT)
-                                .show();
-                        } else if (error == SpeechRecognizer.ERROR_SERVER) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Server error. Please try again later.",
-                                Toast.LENGTH_SHORT
-                            ).show();
-                        } else if (error == SpeechRecognizer.ERROR_CLIENT) {
-                            Toast.makeText(this@MainActivity, "Client error. Please try again.", Toast.LENGTH_SHORT)
-                                .show();
-                        } else if (error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) {
-                            Toast.makeText(this@MainActivity, "No speech input. Please try again.", Toast.LENGTH_SHORT)
-                                .show();
-                        } else if (error == SpeechRecognizer.ERROR_NO_MATCH) {
-                            Toast.makeText(this@MainActivity, "No Holy Names heard. Please try again.", Toast.LENGTH_SHORT)
-                                .show();
-                        } else if (error == SpeechRecognizer.ERROR_RECOGNIZER_BUSY) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Recognition service is busy. Please try again later.",
-                                Toast.LENGTH_SHORT
-                            ).show();
-                        }
-
-                    }
-
-                    override fun onResults(results: Bundle?) {
-                        val resultList = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                        resultList?.forEach { result ->
-                            result.split(" ").forEach { word ->
-                                if (word.contains("Krishna", ignoreCase = true) ||
-                                    word.contains("hurry", ignoreCase = true) ||
-                                    word.contains("Hare", ignoreCase = true) ||
-                                    word.contains("hari", ignoreCase = true) ||
-                                    word.contains("हरे", ignoreCase = true) ||
-                                    word.contains("ram", ignoreCase = true) ||
-                                    word.contains("Merry", ignoreCase = true) ||
-                                    word.contains("Christmas", ignoreCase = true) ||
-                                    word.contains("Christian", ignoreCase = true) ||
-                                    word.contains("कृष्ण", ignoreCase = true) ||
-                                    word.contains("Snickers", ignoreCase = true) ||
-                                    word.contains("hurray", ignoreCase = true) ||
-                                    word.contains("today", ignoreCase = true) ||
-                                    word.contains("headache", ignoreCase = true) ||
-                                    word.contains("राम", ignoreCase = true) ||
-                                    word.contains("rama", ignoreCase = true)
-                                ) {
-                                    tVs[mantraCounter % 16].setTypeface(null, Typeface.BOLD)
-                                    mantraCounter++
-                                    supportActionBar?.title = "Nam Man Rnds: $mantraCounter ${mantraCounter / 16} ${mantraCounter / 1728}"
-                                    tVs[(mantraCounter - 1) % 16].setTypeface(null, Typeface.NORMAL)
-                                }
-                            }
-                        }
-                        Log.d("Hey we got results", mantraCounter.toString())
-                        Log.d("We are listening. We have received results!", results.toString())
-                        recognizer.startListening(intent)
-                    }
-
-                    override fun onPartialResults(partialResults: Bundle?) {
-                        val resultList = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                        resultList?.forEach { result ->
-                            if (result.contains("Krishna", ignoreCase = true)) {
-                                mantraCounter++
-                            }
-                        }
-                        Log.d("SpeechRecognition", "Partial results: $partialResults")
-                    }
-
-                    override fun onEvent(eventType: Int, params: Bundle?) {
-                        // Do something
-                    }
-                }
-
-                switchon = false
-
-                // Start the recognition process
-                recognizer.setRecognitionListener(listener)
-                recognizer.startListening(intent)
-
-                // Create a new thread for the animation
-                val animationThread = Thread {
-                    var index = 0
-                    val handler = Handler(Looper.getMainLooper())
-                    while (!switchon) {
-                        handler.post {
-                            tVs[index].animate()
-                                .scaleX(1.5f)
-                                .scaleY(1.5f)
-                                .setDuration(200)
-                                .withEndAction {
-                                    tVs[index].animate()
-                                        .scaleX(1f)
-                                        .scaleY(1f)
-                                        .setDuration(200)
-                                        .start()
-                                }
-                                .start()
-                        }
-                        Thread.sleep(500)
-                        index = (index + 1) % tVs.size
-                    }
-                }
-                animationThread.start()
-            } else {
-                switchon = true
+                speechRecognitionManager?.startListening()
             }
         }
     }
 
+    private fun onRecognitionResult(mantraCounter: Int, recognizedText: String) {
+        supportActionBar?.title = "Nam Man Rnds: $mantraCounter ${mantraCounter / 16} ${mantraCounter / 1728}"
+
+        // Update the SpeechResultFragment with the recognized text
+        val speechResultFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? SpeechResultFragment
+        speechResultFragment?.updateSpeechResult(recognizedText)
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
 }
