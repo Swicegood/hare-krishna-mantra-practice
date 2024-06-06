@@ -14,7 +14,7 @@ class SpeechRecognitionManager(
     private val context: Context,
     private val tVs: Array<TextView>,
     private val animationManager: AnimationManager?,
-    private val onRecognitionResult: (Int, String) -> Unit
+    private val onRecognitionResult: (Int, String, List<Int>) -> Unit
 ) {
 
     private var mantraCounter = 0
@@ -44,16 +44,29 @@ class SpeechRecognitionManager(
         override fun onResults(results: Bundle?) {
             val resultList = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
             val recognizedText = resultList?.joinToString(separator = " ") ?: ""
+            var translatedRecognizedText = ""
 
             resultList?.forEach { result ->
                 result.split(' ').forEach { word ->
                 if (isMantraWord(word)) {
                     mantraCounter++
-                    onRecognitionResult(mantraCounter, recognizedText.replace("हरे", "Hare")
+                    translatedRecognizedText = recognizedText.replace("हरे", "Hare")
                         .replace("कृष्णा", "Krishna")
-                        .replace("राम", "Rama"))
+                        .replace("राम", "Rama")
+                    onRecognitionResult(mantraCounter, translatedRecognizedText, emptyList())
                 }
                 }
+
+                val mantraWords = listOf("Hare", "Krsna", "Hare", "Krsna", "Krsna", "Krsna", "Hare", "Hare", "Hare", "Rama", "Hare", "Rama", "Rama", "Rama", "Hare", "Hare")
+                val recognizedWords = translatedRecognizedText.split(" ")
+
+                val (alignedMantra, alignedRecognition) = needlemanWunsch(mantraWords, recognizedWords)
+
+                // Identify missing words
+                val missingWordsIndices = alignedMantra.indices.filter { alignedMantra[it] != alignedRecognition[it] }
+
+                // Call back to update the UI
+                onRecognitionResult(mantraCounter, recognizedText, missingWordsIndices)
             }
             Log.d("SpeechRecognition", "Results: $results")
             recognizer.startListening(intent)
@@ -119,5 +132,66 @@ class SpeechRecognitionManager(
 
     fun stopListening() {
         recognizer.stopListening()
+    }
+    fun needlemanWunsch(seq1: List<String>, seq2: List<String>): Pair<List<String>, List<String>> {
+        val n = seq1.size
+        val m = seq2.size
+        val score = Array(n + 1) { IntArray(m + 1) }
+        val traceback = Array(n + 1) { IntArray(m + 1) }
+
+        for (i in 0..n) {
+            score[i][0] = -i
+            traceback[i][0] = 1
+        }
+        for (j in 0..m) {
+            score[0][j] = -j
+            traceback[0][j] = 2
+        }
+
+        for (i in 1..n) {
+            for (j in 1..m) {
+                val match = score[i - 1][j - 1] + if (seq1[i - 1] == seq2[j - 1]) 1 else -1
+                val delete = score[i - 1][j] - 1
+                val insert = score[i][j - 1] - 1
+                score[i][j] = maxOf(match, delete, insert)
+                traceback[i][j] = when (score[i][j]) {
+                    match -> 0
+                    delete -> 1
+                    insert -> 2
+                    else -> throw IllegalStateException()
+                }
+            }
+        }
+
+        var alignedSeq1 = mutableListOf<String>()
+        var alignedSeq2 = mutableListOf<String>()
+        var i = n
+        var j = m
+
+        while (i > 0 || j > 0) {
+            when (traceback[i][j]) {
+                0 -> {
+                    alignedSeq1.add(seq1[i - 1])
+                    alignedSeq2.add(seq2[j - 1])
+                    i -= 1
+                    j -= 1
+                }
+                1 -> {
+                    alignedSeq1.add(seq1[i - 1])
+                    alignedSeq2.add("-")
+                    i -= 1
+                }
+                2 -> {
+                    alignedSeq1.add("-")
+                    alignedSeq2.add(seq2[j - 1])
+                    j -= 1
+                }
+            }
+        }
+
+        alignedSeq1.reverse()
+        alignedSeq2.reverse()
+
+        return Pair(alignedSeq1, alignedSeq2)
     }
 }

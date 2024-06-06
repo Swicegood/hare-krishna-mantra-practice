@@ -28,29 +28,14 @@ class FirstFragment : Fragment() {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
 
+        // Set up the SeekBar
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val tvIDs = arrayOf<Int>(R.id.textview0,
-                                 R.id.textview1,
-                                 R.id.textview2,
-                                 R.id.textview3,
-                                 R.id.textview4,
-                                 R.id.textview5,
-                                 R.id.textview6,
-                                 R.id.textview7,
-                                 R.id.textview7,
-                                 R.id.textview8,
-                                 R.id.textview9,
-                                 R.id.textview10,
-                                 R.id.textview11,
-                                 R.id.textview12,
-                                 R.id.textview13,
-                                 R.id.textview14,
-                                 R.id.textview15)
 
     }
 

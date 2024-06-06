@@ -22,10 +22,6 @@ class SpeechResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Example: Setting speech recognition result to TextView
-        val speechRecognitionResult = "Speech recognition result will appear here."
-        binding.speechResultTextView.text = speechRecognitionResult
     }
 
     fun updateSpeechResult(recognizedText: String) {

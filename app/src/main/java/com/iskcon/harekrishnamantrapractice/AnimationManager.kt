@@ -3,12 +3,15 @@ package com.iskcon.harekrishnamantrapractice
 import android.os.Handler
 import android.os.Looper
 import android.widget.TextView
+import android.util.Log
 
 class AnimationManager(private val tVs: Array<TextView>) {
 
     @Volatile
     private var switchon: Boolean = false
     private var animationThread: Thread? = null
+    @Volatile
+    private var animationSpeed: Int = 1000 // Default speed in milliseconds
 
     fun startAnimation() {
         synchronized(this) {
@@ -28,8 +31,8 @@ class AnimationManager(private val tVs: Array<TextView>) {
                                     if (switchon) {
                                         scaleUpOneByOne(0)
                                     }
-                                }, 400)
-                            }, 400)
+                                }, animationSpeed.toLong())
+                            }, animationSpeed.toLong())
                             return
                         }
 
@@ -40,7 +43,7 @@ class AnimationManager(private val tVs: Array<TextView>) {
 
                         handler.postDelayed({
                             scaleUpOneByOne(index + 1)
-                        }, 400)
+                        }, animationSpeed.toLong())
                     }
 
                     try {
@@ -49,7 +52,7 @@ class AnimationManager(private val tVs: Array<TextView>) {
                                 handler.post {
                                     scaleUpOneByOne(0)
                                 }
-                                Thread.sleep((400 * (tVs.size + 1) + 400).toLong())
+                                Thread.sleep((animationSpeed * (tVs.size + 1) + animationSpeed).toLong())
                             } else {
                                 Thread.sleep(100)
                             }
@@ -71,5 +74,10 @@ class AnimationManager(private val tVs: Array<TextView>) {
             animationThread?.interrupt()
             animationThread = null // Allow the thread to be garbage collected
         }
+    }
+
+    fun updateAnimationSpeed(speed: Int) {
+        animationSpeed = speed
+        Log.d("AnimationManager", "Updated animation speed to $speed milliseconds")
     }
 }
