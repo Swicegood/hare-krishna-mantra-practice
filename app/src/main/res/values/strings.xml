@@ -29,5 +29,7 @@
     <string name="title_drawer">Chanting the holy names of the Mahamantra,</string>
     <string name="title_drawer_2">Hare Krishna, Hare Krishna, Krishna Krishna, Hare Hare, Hare Rama, Hare Rama, Rama Rama, Hare Hare,</string>
     <string name="title_drawer_3">"is a profound and transformative spiritual practice rooted in the ancient tradition of Bhakti Yoga. This mantra, composed of sacred names of the Supreme Divine, is chanted to evoke a deep connection with God, purify the mind, and awaken one's spiritual consciousness. By repeating these names with sincerity and devotion, one can experience inner peace, joy, and a sense of unity with the divine. This practice is accessible to everyone, regardless of background or prior knowledge, and can be performed anywhere, making it a powerful tool for personal and spiritual growth."</string>
-  <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="tortoise_icon">Tortoise icon representing slower speed</string>
+    <string name="hare_icon">Hare icon representing faster speed</string>
 </resources>
