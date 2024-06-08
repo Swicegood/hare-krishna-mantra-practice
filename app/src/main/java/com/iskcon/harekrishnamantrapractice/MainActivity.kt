@@ -171,20 +171,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         speechResultFragment?.updateSpeechResult(recognizedText)
 
         val mantraWords = listOf("Hare", "Krsna", "Hare", "Krsna", "Krsna", "Krsna", "Hare", "Hare", "Hare", "Rama", "Hare", "Rama", "Rama", "Rama", "Hare", "Hare")
-        for (i in mantraWords.indices) {
-            val tv = findViewById<TextView>(tvIDs[i])
-            if (missingWordsIndices.contains(i)) {
-                tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
-            } else {
-                tv.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+
+        if (missingWordsIndices.isEmpty()) {
+            // turn all words green
+            for (i in mantraWords.indices) {
+                val tv = findViewById<TextView>(tvIDs[i])
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
+            }
+        } else {
+                // turn missing words red
+            for (i in mantraWords.indices) {
+                val tv = findViewById<TextView>(tvIDs[i])
+                if (missingWordsIndices.contains(i)) {
+                    tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
+                } else {
+                    tv.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+                }
             }
         }
+
 
         // Reset the color after 1 second
         Handler(Looper.getMainLooper()).postDelayed({
             for (i in missingWordsIndices) {
-                val tv = findViewById<TextView>(tvIDs[i])
-                tv.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+                if (i < tvIDs.size) {
+                    val tv = findViewById<TextView>(tvIDs[i])
+                    tv.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+                }
             }
         }, 2000)
     }

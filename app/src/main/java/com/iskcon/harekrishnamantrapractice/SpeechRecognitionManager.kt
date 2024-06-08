@@ -47,19 +47,27 @@ class SpeechRecognitionManager(
             var translatedRecognizedText = ""
 
             resultList?.forEach { result ->
-                result.split(' ').forEach { word ->
-                if (isMantraWord(word)) {
-                    mantraCounter++
-                    translatedRecognizedText = recognizedText.replace("हरे", "Hare")
-                        .replace("कृष्णा", "Krishna")
-                        .replace("राम", "Rama")
-                    onRecognitionResult(mantraCounter, translatedRecognizedText, emptyList())
+                val words = result.split(' ')
+                words.forEach { word ->
+                    if (isMantraWord(word)) {
+                        mantraCounter++
+                    }
                 }
-                }
+
+                val translatedRecognizedText = result.replace("हरे", "Hare")
+                    .replace("कृष्णा", "Krsna")
+                    .replace("राम", "Rama")
 
                 val mantraWords = listOf("Hare", "Krsna", "Hare", "Krsna", "Krsna", "Krsna", "Hare", "Hare", "Hare", "Rama", "Hare", "Rama", "Rama", "Rama", "Hare", "Hare")
-                val recognizedWords = translatedRecognizedText.split(" ")
+                var recognizedWords = translatedRecognizedText.split(" ")
 
+                if (recognizedWords.size > mantraWords.size) {
+                    recognizedWords = recognizedWords.subList(0, mantraWords.size)
+                } else if (recognizedWords.size < mantraWords.size) {
+                    recognizedWords += List(mantraWords.size - recognizedWords.size) { "" }
+                }
+
+                // Align the mantra and the recognized words
                 val (alignedMantra, alignedRecognition) = needlemanWunsch(mantraWords, recognizedWords)
 
                 // Identify missing words
@@ -67,6 +75,19 @@ class SpeechRecognitionManager(
 
                 // Call back to update the UI
                 onRecognitionResult(mantraCounter, recognizedText, missingWordsIndices)
+
+                // If recognizedWords is twice as long, process it in two segments
+                if (recognizedWords.size > mantraWords.size && recognizedWords.size <= 2 * mantraWords.size) {
+                    val firstSegment = recognizedWords.subList(0, mantraWords.size)
+                    val (alignedMantra1, alignedRecognition1) = needlemanWunsch(mantraWords, firstSegment)
+                    val missingWordsIndices1 = alignedMantra1.indices.filter { alignedMantra1[it] != alignedRecognition1[it] }
+                    onRecognitionResult(mantraCounter, recognizedText, missingWordsIndices1)
+
+                    val secondSegment = recognizedWords.subList(mantraWords.size, recognizedWords.size)
+                    val (alignedMantra2, alignedRecognition2) = needlemanWunsch(mantraWords, secondSegment)
+                    val missingWordsIndices2 = alignedMantra2.indices.filter { alignedMantra2[it] != alignedRecognition2[it] }
+                    onRecognitionResult(mantraCounter, recognizedText, missingWordsIndices2)
+                }
             }
             Log.d("SpeechRecognition", "Results: $results")
             recognizer.startListening(intent)
