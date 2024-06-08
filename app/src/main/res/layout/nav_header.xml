@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/nav_header.xml -->
-<!-- res/layout/nav_header.xml -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -15,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="@string/title_drawer"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:paddingBottom="8dp"/>
 
     <TextView
@@ -23,7 +21,7 @@
         android:layout_height="wrap_content"
         android:text="@string/title_drawer_2"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:paddingBottom="8dp"/>
 
     <TextView
@@ -31,5 +29,5 @@
         android:layout_height="wrap_content"
         android:text="@string/title_drawer_3"
         android:textColor="@color/black"
-        android:textSize="12sp"/>
+        android:textSize="18sp"/>
 </LinearLayout>

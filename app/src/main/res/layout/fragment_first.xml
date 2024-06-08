@@ -199,10 +199,11 @@
 
         <ImageView
             android:id="@+id/tortoiseIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/ic_tortoise"
             app:tint="@android:color/background_dark"
+            android:paddingStart="10dp"
             android:contentDescription="@string/tortoise_icon" />
 
         <SeekBar
@@ -217,10 +218,11 @@
 
         <ImageView
             android:id="@+id/hareIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/ic_hare"
             app:tint="@android:color/background_dark"
+            android:paddingEnd="10dp"
             android:contentDescription="@string/hare_icon" />
 
     </LinearLayout>
