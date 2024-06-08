@@ -51,9 +51,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/parchment"
-        app:headerLayout="@layout/nav_header">
-        <!-- Custom layout for NavigationView -->
-        <include layout="@layout/nav_view_layout" />
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/menu_drawer" >
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

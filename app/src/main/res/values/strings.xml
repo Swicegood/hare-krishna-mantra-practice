@@ -32,6 +32,6 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="tortoise_icon">Tortoise icon representing slower speed</string>
     <string name="hare_icon">Hare icon representing faster speed</string>
-    <string name="language_changed_to_english">Language changed to English</string>
+    <string name="language_changed_to_english">Characters are now Roman</string>
     <string name="language_changed_to_sanskrit">Language changed to Sanskrit</string>
 </resources>

@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         R.id.textview12, R.id.textview13, R.id.textview14, R.id.textview15
     )
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -68,7 +67,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        // Set up the navigation item selected listener
         navigationView.setNavigationItemSelectedListener(this)
+        Log.d("MainActivity", "Navigation item selected listener set")
 
         // Set up the navigation controller
         val navController = findNavController(R.id.fragment_container_view)
@@ -132,6 +133,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        Log.d("MainActivity", "Navigation item selected: ${item.itemId}")
         when (item.itemId) {
             R.id.toggle_language -> {
                 // Toggle the language
@@ -155,6 +157,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportActionBar?.title = "Correct Mantras: 0"
                 Toast.makeText(this, "Counters cleared", Toast.LENGTH_SHORT).show()
             }
+            else -> Log.d("MainActivity", "Unknown menu item selected: ${item.itemId}")
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true

@@ -13,6 +13,7 @@ class SpeechResultFragment : Fragment() {
     private val binding get() = _binding!!
     private var originalText: String = ""
     private var translatedText: String = ""
+    private var isLanguageToggled: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,11 +32,16 @@ class SpeechResultFragment : Fragment() {
         translatedText = recognizedText.replace("हरे", "Hare")
             .replace("कृष्णा", "Krishna")
             .replace("राम", "Rama")
-        binding.speechResultTextView.text = originalText
+        if (isLanguageToggled) {
+            binding.speechResultTextView.text = translatedText
+        } else {
+            binding.speechResultTextView.text = originalText
+        }
     }
 
     fun toggleLanguage(isToggled: Boolean) {
         binding.speechResultTextView.text = if (isToggled) translatedText else originalText
+        isLanguageToggled = isToggled
     }
 
     override fun onDestroyView() {
