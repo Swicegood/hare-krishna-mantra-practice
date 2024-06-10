@@ -12,6 +12,8 @@ class AnimationManager(private val tVs: Array<TextView>) {
     private var animationThread: Thread? = null
     @Volatile
     private var animationSpeed: Int = 1000 // Default speed in milliseconds
+    private var handler: Handler? = null
+    private var runnable: Runnable? = null
 
     fun startAnimation() {
         synchronized(this) {
@@ -66,6 +68,7 @@ class AnimationManager(private val tVs: Array<TextView>) {
                 animationThread?.start()
             }
         }
+        handler?.post(runnable!!)
     }
 
     fun stopAnimation() {
@@ -73,7 +76,10 @@ class AnimationManager(private val tVs: Array<TextView>) {
             switchon = false
             animationThread?.interrupt()
             animationThread = null // Allow the thread to be garbage collected
+            handler?.removeCallbacks(runnable!!)
         }
+
+
     }
 
     fun updateAnimationSpeed(speed: Int) {
