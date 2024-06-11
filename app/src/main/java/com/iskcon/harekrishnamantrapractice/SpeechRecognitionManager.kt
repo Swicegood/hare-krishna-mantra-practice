@@ -131,8 +131,14 @@ class SpeechRecognitionManager(
                 SpeechRecognizer.ERROR_AUDIO -> showError("Audio error. Please try again.")
                 SpeechRecognizer.ERROR_SERVER -> showError("Server error. Please try again later.")
                 SpeechRecognizer.ERROR_CLIENT -> showError("Client error. Please try again.")
-                SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> showError("No speech input. Please try again.")
-                SpeechRecognizer.ERROR_NO_MATCH -> showError("No Holy Names heard. Please try again.")
+                SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> {
+                    showError("No speech input. Please try again.")
+                    animationManager?.stopAnimation()
+                }
+                SpeechRecognizer.ERROR_NO_MATCH -> {
+                    showError("No Holy Names heard. Please try again.")
+                    animationManager?.stopAnimation()
+                }
                 SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> showError("Recognition service is busy. Please try again later.")
             }
         }

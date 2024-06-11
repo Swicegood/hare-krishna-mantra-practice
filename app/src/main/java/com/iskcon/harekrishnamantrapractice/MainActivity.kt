@@ -98,12 +98,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val speedSeekBar = binding.root.findViewById<SeekBar>(R.id.speedSeekBar)
         speedSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // Reverse the progress value
-                val reversedProgress = speedSeekBar.max - progress
+                // Map progress to speed with max speed at 90% of the slider
+                val maxSpeed = 200 // fastest speed in milliseconds
+                val minSpeed = 1000 // slowest speed in milliseconds
+                val effectiveProgress = ((1000 - progress) / 900.0) * (minSpeed - maxSpeed) + maxSpeed
 
                 // Update the animation speed
-                animationManager?.updateAnimationSpeed(reversedProgress)
-                Log.d("MainActivity", "SeekBar progress changed: $progress, reversed: $reversedProgress")
+                animationManager?.updateAnimationSpeed(effectiveProgress.toInt())
+                Log.d("MainActivity", "SeekBar progress changed: $progress, effective speed: $effectiveProgress")
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -163,24 +165,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun onRecognitionResult(nameCounter: Int, recognizedText: String, missingWordsIndices: List<Int>) {
-        supportActionBar?.title = "Correct Mantras: ${nameCounter / 16}"
+    private fun onRecognitionResult(mantraCounter: Int, recognizedText: String, missingWordsIndices: List<Int>) {
+        supportActionBar?.title = "Correct Mantras: ${mantraCounter / 16}"
 
         // Update the SpeechResultFragment with the recognized text
         val speechResultFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? SpeechResultFragment
         speechResultFragment?.updateSpeechResult(recognizedText)
 
         val mantraWords = listOf("Hare", "Krsna", "Hare", "Krsna", "Krsna", "Krsna", "Hare", "Hare", "Hare", "Rama", "Hare", "Rama", "Rama", "Rama", "Hare", "Hare")
-
-        if (missingWordsIndices.isEmpty()) {
-            // turn all words green
-            for (i in mantraWords.indices) {
-                val tv = findViewById<TextView>(tvIDs[i])
-                tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
-            }
-        } else {
-                // turn missing words red
-            for (i in mantraWords.indices) {
+        for (i in mantraWords.indices) {
+            if (i < tvIDs.size) {
                 val tv = findViewById<TextView>(tvIDs[i])
                 if (missingWordsIndices.contains(i)) {
                     tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
@@ -189,7 +183,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-
 
         // Reset the color after 1 second
         Handler(Looper.getMainLooper()).postDelayed({
