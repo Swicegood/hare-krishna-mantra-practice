@@ -1,8 +1,10 @@
 package com.iskcon.harekrishnamantrapractice
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,6 +28,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.iskcon.harekrishnamantrapractice.databinding.ActivityMainBinding
 
+const val PREFS_NAME = "mantra_prefs"
+const val MANTRA_COUNTER_KEY = "mantra_counter"
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -36,8 +41,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var isLanguageToggled: Boolean = false
     var nameCounter = 0
     private var switchon: Boolean = true
+    private var isListening: Boolean = false
     private var animationManager: AnimationManager? = null
     private var speechRecognitionManager: SpeechRecognitionManager? = null
+    private lateinit var audioManager: AudioManager
+    private var previousVolume: Int = 0
     private val tvIDs = arrayOf(
         R.id.textview0, R.id.textview1, R.id.textview2, R.id.textview3,
         R.id.textview4, R.id.textview5, R.id.textview6, R.id.textview7,
@@ -76,6 +84,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        nameCounter = loadMantraCounter()
+        supportActionBar?.title = "Mantra Counter: ${nameCounter/16}"
+        Log.d("MainActivity", "Loaded mantra counter: $nameCounter")
+
         val tVs = tvIDs.map { binding.root.findViewById<TextView>(it) }.toTypedArray()
 
         // Load the custom font
@@ -86,9 +98,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             tv.typeface = typeface
             tv.textSize = 34f
         }
-
+        // Initialize AudioManager
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         animationManager = AnimationManager(tVs)
-        speechRecognitionManager = SpeechRecognitionManager(this, tVs, animationManager, ::onRecognitionResult)
+        speechRecognitionManager = SpeechRecognitionManager(this, tVs, animationManager, ::onRecognitionResult, initialCounter = nameCounter)
 
         // Load SpeechResultFragment
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -112,25 +125,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
+
         binding.fab.setOnClickListener {
-            switchon = !switchon
-            if (switchon) {
-                speechRecognitionManager?.stopListening()
-                animationManager?.stopAnimation()
+            if (isListening) {
+                stopListening()
             } else {
-                if (ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.RECORD_AUDIO
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.RECORD_AUDIO),
-                        0
-                    )
-                }
-                speechRecognitionManager?.startListening()
+                startListening()
             }
+            updateFabIcon()
         }
     }
 
@@ -157,6 +159,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // Handle clear counters action
                 nameCounter = 0
                 supportActionBar?.title = "Correct Mantras: 0"
+                saveMantraCounter(nameCounter)
                 Toast.makeText(this, "Counters cleared", Toast.LENGTH_SHORT).show()
             }
             else -> Log.d("MainActivity", "Unknown menu item selected: ${item.itemId}")
@@ -167,6 +170,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun onRecognitionResult(mantraCounter: Int, recognizedText: String, missingWordsIndices: List<Int>) {
         supportActionBar?.title = "Correct Mantras: ${mantraCounter / 16}"
+        saveMantraCounter(mantraCounter)
 
         // Update the SpeechResultFragment with the recognized text
         val speechResultFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? SpeechResultFragment
@@ -195,8 +199,64 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }, 2000)
     }
 
+    private fun muteSystemVolume() {
+        previousVolume = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM)
+        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 0, 0)
+    }
+
+    private fun restoreSystemVolume() {
+        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, previousVolume, 0)
+    }
+
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.fragment_container_view)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    private fun saveMantraCounter(counter: Int) {
+        val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt(MANTRA_COUNTER_KEY, counter)
+        editor.apply()
+    }
+
+    private fun loadMantraCounter(): Int {
+        val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        return sharedPreferences.getInt(MANTRA_COUNTER_KEY, 0)
+    }
+
+    private fun startListening() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.RECORD_AUDIO),
+                0
+            )
+            return
+        }
+        muteSystemVolume()
+        speechRecognitionManager?.startListening()
+        animationManager?.startAnimation()
+        isListening = true
+    }
+
+    private fun stopListening() {
+        speechRecognitionManager?.stopListening()
+        animationManager?.stopAnimation()
+        restoreSystemVolume()
+        isListening = false
+    }
+
+    private fun updateFabIcon() {
+        binding.fab.setImageResource(
+            if (isListening) R.drawable.ic_clear_counters
+            else R.drawable.ic_baseline_mic_24
+        )
+    }
+
 }

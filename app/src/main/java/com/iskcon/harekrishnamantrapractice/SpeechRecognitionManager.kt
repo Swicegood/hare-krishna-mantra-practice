@@ -14,10 +14,11 @@ class SpeechRecognitionManager(
     private val context: Context,
     private val tVs: Array<TextView>,
     private val animationManager: AnimationManager?,
-    private val onRecognitionResult: (Int, String, List<Int>) -> Unit
+    private val onRecognitionResult: (Int, String, List<Int>) -> Unit,
+    initialCounter: Int
 ) {
 
-    private var mantraCounter = 0
+    private var mantraCounter = initialCounter
     private val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
     private val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(RecognizerIntent.EXTRA_LANGUAGE, "hi-IN")
