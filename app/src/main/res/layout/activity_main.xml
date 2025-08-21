@@ -10,11 +10,13 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             android:theme="@style/Theme.HareKrishnaMantraPractice.AppBarOverlay">
 
             <androidx.appcompat.widget.Toolbar
@@ -51,6 +53,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/parchment"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/menu_drawer" >
     </com.google.android.material.navigation.NavigationView>
