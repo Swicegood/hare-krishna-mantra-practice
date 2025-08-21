@@ -60,11 +60,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Handle system window insets for edge-to-edge display
-        ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // Don't apply padding to the root DrawerLayout itself
-            // The fitsSystemWindows="true" attributes in XML will handle the insets properly
+        // Enable edge-to-edge display and handle system window insets
+        ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout) { _, windowInsets ->
+            // Let the system handle the insets automatically with fitsSystemWindows="true"
             windowInsets
         }
 
