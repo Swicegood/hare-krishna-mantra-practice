@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var microphoneStatusIndicator: LinearLayout? = null
     private var microphoneEmoji: TextView? = null
     private var microphoneText: TextView? = null
+    private var bluetoothAudioManager: BluetoothAudioManager? = null
     private val tvIDs = arrayOf(
         R.id.textview0, R.id.textview1, R.id.textview2, R.id.textview3,
         R.id.textview4, R.id.textview5, R.id.textview6, R.id.textview7,
