@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -48,6 +49,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var speechRecognitionManager: SpeechRecognitionManager? = null
     private lateinit var audioManager: AudioManager
     private var previousVolume: Int = 0
+    private var microphoneStatusIndicator: LinearLayout? = null
+    private var microphoneEmoji: TextView? = null
+    private var microphoneText: TextView? = null
     private val tvIDs = arrayOf(
         R.id.textview0, R.id.textview1, R.id.textview2, R.id.textview3,
         R.id.textview4, R.id.textview5, R.id.textview6, R.id.textview7,
@@ -97,6 +101,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Log.d("MainActivity", "Loaded mantra counter: $nameCounter")
 
         val tVs = tvIDs.map { binding.root.findViewById<TextView>(it) }.toTypedArray()
+                
+        // Initialize microphone status indicator
+        microphoneStatusIndicator = binding.root.findViewById<LinearLayout>(R.id.microphoneStatusIndicator)
+        microphoneEmoji = binding.root.findViewById<TextView>(R.id.microphoneEmoji)
+        microphoneText = binding.root.findViewById<TextView>(R.id.microphoneText)
 
         // Load the custom font
         val typeface = ResourcesCompat.getFont(this, R.font.tangerine_bold) ?: Typeface.DEFAULT
@@ -110,6 +119,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         animationManager = AnimationManager(tVs)
         speechRecognitionManager = SpeechRecognitionManager(this, tVs, animationManager, ::onRecognitionResult, initialCounter = nameCounter)
+
+        // Update microphone status indicator after Bluetooth manager is initialized
+        Handler(Looper.getMainLooper()).postDelayed({
+            updateMicrophoneStatusIndicator()
+        }, 1000) // Delay to allow Bluetooth manager to initialize
 
         // Load SpeechResultFragment
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -267,4 +281,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         )
     }
 
+    private fun updateMicrophoneStatusIndicator() {
+        val isBluetoothAvailable = bluetoothAudioManager?.isBluetoothAudioAvailable() == true
+        val isBluetoothScoOn = bluetoothAudioManager?.isBluetoothScoOn() == true
+        val isCurrentlyListening = isListening
+        
+        // More accurate detection: only show Bluetooth when actively listening AND SCO is on
+        val (emoji, text) = when {
+            isCurrentlyListening && isBluetoothAvailable && isBluetoothScoOn -> "🔵" to "Bluetooth Mic"
+            isCurrentlyListening -> "📱" to "Phone Mic"
+            isBluetoothAvailable -> "📱" to "Phone Mic (BT Available)"
+            else -> "📱" to "Phone Mic"
+        }
+        
+        microphoneEmoji?.text = emoji
+        microphoneText?.text = text
+        Log.d("MainActivity", "Updated microphone indicator: $emoji $text (Listening: $isCurrentlyListening, BT available: $isBluetoothAvailable, SCO on: $isBluetoothScoOn)")
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        bluetoothAudioManager?.cleanup()
+    }
 }
