@@ -118,11 +118,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         // Initialize AudioManager
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        
+        // Initialize BluetoothAudioManager
+        Log.d("MainActivity", "=== INITIALIZING BLUETOOTH AUDIO MANAGER ===")
+        bluetoothAudioManager = BluetoothAudioManager(this).apply {
+            onConnectionStateChanged = {
+                Log.d("MainActivity", "Bluetooth connection state changed, updating indicator")
+                updateMicrophoneStatusIndicator()
+            }
+        }
+        Log.d("MainActivity", "=== BLUETOOTH AUDIO MANAGER INITIALIZED ===")
+        
         animationManager = AnimationManager(tVs)
         speechRecognitionManager = SpeechRecognitionManager(this, tVs, animationManager, ::onRecognitionResult, initialCounter = nameCounter)
 
         // Update microphone status indicator after Bluetooth manager is initialized
         Handler(Looper.getMainLooper()).postDelayed({
+            Log.d("MainActivity", "Initial microphone status indicator update")
             updateMicrophoneStatusIndicator()
         }, 1000) // Delay to allow Bluetooth manager to initialize
 
