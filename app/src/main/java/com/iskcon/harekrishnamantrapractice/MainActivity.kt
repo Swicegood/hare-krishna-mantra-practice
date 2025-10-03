@@ -250,29 +250,58 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun startListening() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.RECORD_AUDIO),
-                0
-            )
+        Log.d("MainActivity", "========================================")
+        Log.d("MainActivity", "START LISTENING")
+        Log.d("MainActivity", "========================================")
+        
+        // Check for required permissions
+        val permissions = mutableListOf<String>()
+        
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.RECORD_AUDIO)
+        }
+        
+        // Check Bluetooth permissions for Android 12+ (API 31+)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
+            }
+        }
+        
+        if (permissions.isNotEmpty()) {
+            Log.d("MainActivity", "Missing permissions: $permissions")
+            ActivityCompat.requestPermissions(this, permissions.toTypedArray(), 0)
             return
         }
+        
+        Log.d("MainActivity", "All permissions granted")
+        Log.d("MainActivity", "Checking Bluetooth audio availability...")
+        val isBluetoothAvailable = bluetoothAudioManager?.isBluetoothAudioAvailable() == true
+        Log.d("MainActivity", "Bluetooth audio available: $isBluetoothAvailable")
+        
         muteSystemVolume()
         speechRecognitionManager?.startListening()
         animationManager?.startAnimation()
         isListening = true
+        
+        Log.d("MainActivity", "Speech recognition and animation started")
+        updateMicrophoneStatusIndicator()
+        Log.d("MainActivity", "========================================")
     }
 
     private fun stopListening() {
+        Log.d("MainActivity", "========================================")
+        Log.d("MainActivity", "STOP LISTENING")
+        Log.d("MainActivity", "========================================")
+        
         speechRecognitionManager?.stopListening()
         animationManager?.stopAnimation()
         restoreSystemVolume()
         isListening = false
+        
+        Log.d("MainActivity", "Speech recognition and animation stopped")
+        updateMicrophoneStatusIndicator()
+        Log.d("MainActivity", "========================================")
     }
 
     private fun updateFabIcon() {
@@ -283,21 +312,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateMicrophoneStatusIndicator() {
+        Log.d("MainActivity", "========================================")
+        Log.d("MainActivity", "UPDATE MICROPHONE STATUS INDICATOR")
+        Log.d("MainActivity", "========================================")
+        
         val isBluetoothAvailable = bluetoothAudioManager?.isBluetoothAudioAvailable() == true
         val isBluetoothScoOn = bluetoothAudioManager?.isBluetoothScoOn() == true
         val isCurrentlyListening = isListening
         
-        // More accurate detection: only show Bluetooth when actively listening AND SCO is on
+        Log.d("MainActivity", "Status check:")
+        Log.d("MainActivity", "  - Currently listening: $isCurrentlyListening")
+        Log.d("MainActivity", "  - Bluetooth available: $isBluetoothAvailable")
+        Log.d("MainActivity", "  - Bluetooth SCO on: $isBluetoothScoOn")
+        
+        // Show Bluetooth when available, regardless of listening state
         val (emoji, text) = when {
-            isCurrentlyListening && isBluetoothAvailable && isBluetoothScoOn -> "🔵" to "Bluetooth Mic"
-            isCurrentlyListening -> "📱" to "Phone Mic"
-            isBluetoothAvailable -> "📱" to "Phone Mic (BT Available)"
+            isBluetoothAvailable -> "🔵" to "Bluetooth Connected"
             else -> "📱" to "Phone Mic"
         }
         
+        Log.d("MainActivity", "Indicator update:")
+        Log.d("MainActivity", "  - Emoji: $emoji")
+        Log.d("MainActivity", "  - Text: $text")
+        
         microphoneEmoji?.text = emoji
         microphoneText?.text = text
-        Log.d("MainActivity", "Updated microphone indicator: $emoji $text (Listening: $isCurrentlyListening, BT available: $isBluetoothAvailable, SCO on: $isBluetoothScoOn)")
+        
+        Log.d("MainActivity", "Microphone indicator updated successfully")
+        Log.d("MainActivity", "========================================")
     }
     
     override fun onDestroy() {
