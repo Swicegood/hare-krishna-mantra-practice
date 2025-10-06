@@ -38,9 +38,8 @@ class SpeechRecognitionManager(
         override fun onEndOfSpeech() {}
         override fun onError(error: Int) {
             Log.d("SpeechRecognition", "Error: $error")
-            // Don't auto-restart on busy error - let it resolve naturally
-            if (error != SpeechRecognizer.ERROR_NO_MATCH && 
-                error != SpeechRecognizer.ERROR_RECOGNIZER_BUSY) {
+            // Keep listening unless it's a busy error - meditation requires continuous listening
+            if (error != SpeechRecognizer.ERROR_RECOGNIZER_BUSY) {
                 recognizer.startListening(intent)
             }
             handleError(error)
@@ -138,11 +137,11 @@ class SpeechRecognitionManager(
                 SpeechRecognizer.ERROR_CLIENT -> showError("Client error. Please try again.")
                 SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> {
                     showError("No speech input. Please try again.")
-                    animationManager?.stopAnimation()
+                    // Keep animation running - meditation continues during pauses
                 }
                 SpeechRecognizer.ERROR_NO_MATCH -> {
                     showError("No Holy Names heard. Please try again.")
-                    animationManager?.stopAnimation()
+                    // Keep animation running - meditation continues during pauses
                 }
                 SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> showError("Recognition service is busy. Please try again later.")
             }
