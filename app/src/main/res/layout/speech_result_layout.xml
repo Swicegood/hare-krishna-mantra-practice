@@ -15,7 +15,7 @@
         android:textSize="18sp"
         android:background="@android:color/white"
         android:gravity="center"
-        android:text="Speech recognition results will appear here."
+        android:text="Speech recognition results will appear here.\nChant the words above as they become emphasized"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
