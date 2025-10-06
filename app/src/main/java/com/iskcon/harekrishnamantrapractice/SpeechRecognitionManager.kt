@@ -28,7 +28,8 @@ class SpeechRecognitionManager(
 
     private val listener = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) {
-            Toast.makeText(context, "Listening...", Toast.LENGTH_SHORT).show()
+            Log.d("SpeechRecognition", "Ready for speech")
+            // Removed toast to prevent quota issues
         }
 
         override fun onBeginningOfSpeech() {}
@@ -37,7 +38,9 @@ class SpeechRecognitionManager(
         override fun onEndOfSpeech() {}
         override fun onError(error: Int) {
             Log.d("SpeechRecognition", "Error: $error")
-            if (error != SpeechRecognizer.ERROR_NO_MATCH) {
+            // Don't auto-restart on busy error - let it resolve naturally
+            if (error != SpeechRecognizer.ERROR_NO_MATCH && 
+                error != SpeechRecognizer.ERROR_RECOGNIZER_BUSY) {
                 recognizer.startListening(intent)
             }
             handleError(error)
@@ -160,7 +163,8 @@ class SpeechRecognitionManager(
     }
 
     fun stopListening() {
-        recognizer.stopListening()
+        recognizer.cancel() // Cancel completely to free up the service
+        animationManager?.stopAnimation()
     }
     fun needlemanWunsch(seq1: List<String>, seq2: List<String>): Pair<List<String>, List<String>> {
         val n = seq1.size
