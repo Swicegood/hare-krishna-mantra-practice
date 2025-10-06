@@ -296,6 +296,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Animation is already started by speechRecognitionManager
         isListening = true
         
+        // Show listening popup
+        Toast.makeText(this, "Listening", Toast.LENGTH_SHORT).show()
+        
         Log.d("MainActivity", "Speech recognition and animation started")
         updateMicrophoneStatusIndicator()
         Log.d("MainActivity", "========================================")
