@@ -85,5 +85,11 @@ class AnimationManager(private val tVs: Array<TextView>) {
     fun updateAnimationSpeed(speed: Int) {
         animationSpeed = speed
         Log.d("AnimationManager", "Updated animation speed to $speed milliseconds")
+        
+        // Restart animation if it's currently running to apply the new speed immediately
+        if (switchon) {
+            stopAnimation()
+            startAnimation()
+        }
     }
 }
