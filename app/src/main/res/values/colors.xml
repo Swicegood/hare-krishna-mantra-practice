@@ -12,4 +12,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="parchment">#FFEDC992</color>
     <color name="parchmentdark">#FFC68446</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
 </resources>
