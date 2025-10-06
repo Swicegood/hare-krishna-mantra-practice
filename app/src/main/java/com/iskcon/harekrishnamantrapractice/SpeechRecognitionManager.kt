@@ -48,7 +48,10 @@ class SpeechRecognitionManager(
 
         override fun onResults(results: Bundle?) {
             val resultList = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-            val recognizedText = resultList?.joinToString(separator = " ") ?: ""
+            val rawText = resultList?.joinToString(separator = " ") ?: ""
+            
+            // Filter to only keep holy names in Devanagari or English
+            val recognizedText = filterHolyNamesOnly(rawText)
             var translatedRecognizedText = ""
 
             resultList?.forEach { result ->
@@ -113,6 +116,17 @@ class SpeechRecognitionManager(
         }
 
         override fun onEvent(eventType: Int, params: Bundle?) {}
+
+        private fun filterHolyNamesOnly(text: String): String {
+            val words = text.split(' ')
+            val filteredWords = words.filter { word ->
+                // Only keep words that are exactly the holy names in Devanagari
+                word == "हरे" || word == "कृष्णा" || word == "राम" ||
+                // Or English variants that would be recognized
+                isMantraWord(word)
+            }
+            return filteredWords.joinToString(" ")
+        }
 
         private fun isMantraWord(word: String): Boolean {
             return word.contains("Krishna", ignoreCase = true) ||
