@@ -311,6 +311,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         restoreSystemVolume()
         isListening = false
         
+        // Update the SpeechResultFragment to show "Stopped"
+        val speechResultFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? SpeechResultFragment
+        speechResultFragment?.updateSpeechResult("Stopped")
+        
         Log.d("MainActivity", "Speech recognition and animation stopped")
         updateMicrophoneStatusIndicator()
         Log.d("MainActivity", "========================================")
