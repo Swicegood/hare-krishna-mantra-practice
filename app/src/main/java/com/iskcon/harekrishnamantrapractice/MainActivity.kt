@@ -293,7 +293,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         
         muteSystemVolume()
         speechRecognitionManager?.startListening()
-        animationManager?.startAnimation()
+        // Animation is already started by speechRecognitionManager
         isListening = true
         
         Log.d("MainActivity", "Speech recognition and animation started")
