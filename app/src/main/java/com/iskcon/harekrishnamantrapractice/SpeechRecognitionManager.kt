@@ -20,6 +20,7 @@ class SpeechRecognitionManager(
 
     private var mantraCounter = initialCounter
     private val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
+    private var shouldKeepListening = false // Track if we should auto-restart
     private val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(RecognizerIntent.EXTRA_LANGUAGE, "hi-IN")
         putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -38,8 +39,8 @@ class SpeechRecognitionManager(
         override fun onEndOfSpeech() {}
         override fun onError(error: Int) {
             Log.d("SpeechRecognition", "Error: $error")
-            // Keep listening unless it's a busy error - meditation requires continuous listening
-            if (error != SpeechRecognizer.ERROR_RECOGNIZER_BUSY) {
+            // Keep listening only if user wants to and it's not a busy error
+            if (shouldKeepListening && error != SpeechRecognizer.ERROR_RECOGNIZER_BUSY) {
                 recognizer.startListening(intent)
             }
             handleError(error)
@@ -94,7 +95,10 @@ class SpeechRecognitionManager(
                 }
             }
             Log.d("SpeechRecognition", "Results: $results")
-            recognizer.startListening(intent)
+            // Only auto-restart if user wants to keep listening
+            if (shouldKeepListening) {
+                recognizer.startListening(intent)
+            }
         }
 
         override fun onPartialResults(partialResults: Bundle?) {
@@ -157,11 +161,13 @@ class SpeechRecognitionManager(
     }
 
     fun startListening() {
+        shouldKeepListening = true
         recognizer.startListening(intent)
         animationManager?.startAnimation()
     }
 
     fun stopListening() {
+        shouldKeepListening = false
         recognizer.cancel() // Cancel completely to free up the service
         animationManager?.stopAnimation()
     }
