@@ -9,77 +9,52 @@ class AnimationManager(private val tVs: Array<TextView>) {
 
     @Volatile
     private var switchon: Boolean = false
-    private var animationThread: Thread? = null
     @Volatile
     private var animationSpeed: Int = 1000 // Default speed in milliseconds
-    private var handler: Handler? = null
-    private var runnable: Runnable? = null
+    private val handler = Handler(Looper.getMainLooper())
 
     fun startAnimation() {
         synchronized(this) {
-            switchon = true
-            if (animationThread == null || !animationThread!!.isAlive) {
-                animationThread = Thread {
-                    val handler = Handler(Looper.getMainLooper())
-
-                    fun scaleUpOneByOne(index: Int) {
-                        if (index >= tVs.size) {
-                            handler.postDelayed({
-                                tVs.forEach { tv ->
-                                    tv.scaleX = 1f
-                                    tv.scaleY = 1f
-                                }
-                                handler.postDelayed({
-                                    if (switchon) {
-                                        scaleUpOneByOne(0)
-                                    }
-                                }, animationSpeed.toLong())
-                            }, animationSpeed.toLong())
-                            return
-                        }
-
-                        handler.post {
-                            tVs[index].scaleX = 1.5f
-                            tVs[index].scaleY = 1.5f
-                        }
-
-                        handler.postDelayed({
-                            scaleUpOneByOne(index + 1)
-                        }, animationSpeed.toLong())
-                    }
-
-                    try {
-                        while (!Thread.currentThread().isInterrupted) {
-                            if (switchon) {
-                                handler.post {
-                                    scaleUpOneByOne(0)
-                                }
-                                Thread.sleep((animationSpeed * (tVs.size + 1) + animationSpeed).toLong())
-                            } else {
-                                Thread.sleep(100)
-                            }
-                        }
-                    } catch (e: InterruptedException) {
-                        // Handle thread interruption gracefully
-                        Thread.currentThread().interrupt() // Preserve the interrupt status
-                    }
-                }
-
-                animationThread?.start()
+            if (!switchon) {
+                switchon = true
+                scaleUpOneByOne(0)
             }
         }
-        handler?.post(runnable!!)
+    }
+
+    private fun scaleUpOneByOne(index: Int) {
+        if (!switchon) return
+        
+        if (index >= tVs.size) {
+            handler.postDelayed({
+                tVs.forEach { tv ->
+                    tv.scaleX = 1f
+                    tv.scaleY = 1f
+                }
+                handler.postDelayed({
+                    if (switchon) {
+                        scaleUpOneByOne(0)
+                    }
+                }, animationSpeed.toLong())
+            }, animationSpeed.toLong())
+            return
+        }
+
+        handler.post {
+            tVs[index].scaleX = 1.5f
+            tVs[index].scaleY = 1.5f
+        }
+
+        handler.postDelayed({
+            scaleUpOneByOne(index + 1)
+        }, animationSpeed.toLong())
     }
 
     fun stopAnimation() {
         synchronized(this) {
             switchon = false
-            animationThread?.interrupt()
-            animationThread = null // Allow the thread to be garbage collected
-            handler?.removeCallbacks(runnable!!)
+            handler.removeCallbacksAndMessages(null) // Remove all pending callbacks
         }
-
-
     }
 
     fun updateAnimationSpeed(speed: Int) {
